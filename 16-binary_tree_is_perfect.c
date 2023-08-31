@@ -1,40 +1,35 @@
 #include "binary_trees.h"
-
 /**
- * binary_tree_height - Measures the height of a binary tree.
- * @tree: Pointer to the root node of the tree to measure the height.
+ * is_perfect_recursive - Checks if a tree is perfect recursively.
+ * @tree: The tree to check.
  *
- * Return: Height of the binary tree, or 0 if tree is NULL.
+ * Return: 0 if the tree is not perfect, or the level of height if it is.
  */
 
-size_t binary_tree_height(const binary_tree_t *tree)
+int is_perfect_recursive(const binary_tree_t *tree)
 {
 
-if (tree == NULL)
+int left_level, right_level;
+left_level = 0, right_level = 0;
+
+if (tree->left && tree->right)
+{
+left_level = 1 + is_perfect_recursive(tree->left);
+right_level = 1 + is_perfect_recursive(tree->right);
+
+if (left_level == right_level && left_level != 0 && right_level != 0)
+return (left_level);
+
 return (0);
-
-size_t left_height = binary_tree_height(tree->left);
-size_t right_height = binary_tree_height(tree->right);
-
-return ((left_height > right_height ? left_height : right_height) + 1);
-
 }
-
-/**
- * binary_tree_size - Measures the size of a binary tree.
- * @tree: Pointer to the root node of the tree to measure the size.
- *
- * Return: Size of the binary tree, or 0 if tree is NULL.
- */
-
-size_t binary_tree_size(const binary_tree_t *tree)
+else if (!tree->left && !tree->right)
 {
-
-if (tree == NULL)
+return (1);
+}
+else
+{
 return (0);
-
-return (1 + binary_tree_size(tree->left) + binary_tree_size(tree->right));
-
+}
 }
 
 /**
@@ -43,16 +38,23 @@ return (1 + binary_tree_size(tree->left) + binary_tree_size(tree->right));
  *
  * Return: 1 if the binary tree is perfect, 0 otherwise or if tree is NULL.
  */
-
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
+int result = 0;
 
 if (tree == NULL)
+{
+return (0);
+}
+else
+{
+result = is_perfect_recursive(tree);
+if (result != 0)
+{
+return (1);
+}
 return (0);
 
-size_t height = binary_tree_height(tree);
-size_t size = binary_tree_size(tree);
-
-return ((size == (1 << height) - 1));
-
 }
+}
+
